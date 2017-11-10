@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Snake!</title>
+
+    <style media="screen">
+      html, body {margin: 0; height: 100%; overflow: hidden}
+    </style>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.6.0/pixi.js" charset="utf-8"></script>
+
+
+  </head>
+  <body>
+    <script type="text/javascript">
+
+    PIXI.utils.sayHello()
+
+    //settings
+    let worldWidth = window.innerWidth
+    let worldHeight = window.innerHeight
+    let app;
+
+    let direction = "right"
+    let speed = 5
+
+    let player;
+    //define player
+    function setup(){
+      //create world
+      app = new PIXI.Application(worldWidth, worldHeight, {backgroundColor : 0x1099bb});
+
+      document.body.appendChild(app.view)
+
+
+      //draw map
+      let blockWidth = 30
+      let blockHeight = 30
+      let mapSize = 17
+
+      //add container
+      var container = new PIXI.Container();
+      app.stage.addChild(container);
+
+      let leftPadding = 400
+      let topPadding = 50
+
+      let counter = 0
+      for(var j = 0; j < mapSize; j++){
+        for(var i = 0; i < mapSize; i++){
+          var block = new PIXI.Graphics();
+          counter % 2 == 0 ? block.beginFill(0xabd55a) : block.beginFill(0xa3cf53)
+          counter++
+          //block.lineStyle(5, 0xFF0000);
+          block.drawRect(i * blockWidth + leftPadding, j * blockHeight + topPadding, blockHeight, blockWidth);
+
+          container.addChild(block);
+        }
+      }
+
+
+      //draw player
+      let playerWidth = blockWidth
+      let playerHeight = blockHeight
+      let playerGraphic = new PIXI.Graphics();
+      playerGraphic.beginFill(0xca53cf)
+      playerGraphic.drawRect(400, 50, playerWidth, playerHeight);
+      let playerTexture = playerGraphic.generateCanvasTexture();
+      player = new PIXI.Sprite(playerTexture)
+      player.position.set(400, 50)
+      container.addChild(player)
+
+      //draw apple
+      let appleWidth = blockWidth
+      let appleHeight = blockHeight
+      let apple = new PIXI.Graphics();
+      apple.beginFill(0xe81010)
+      apple.drawRect(730, 320, appleWidth, appleHeight);
+      container.addChild(apple)
+
+
+
+
+      // var brickTexture = PIXI.Texture.fromImage('assests/marioBrick.png');
+      //
+      // // Create a 5x5 grid of bunnies
+      // for (var i = 0; i < 25; i++) {
+      //     var brick = new PIXI.Sprite(brickTexture);
+      //     brick.anchor.set(i / 10);
+      //     brick.scale.x = 0.05
+      //     brick.scale.y = 0.05
+      //     brick.x = (i % 10) * 40;
+      //     brick.y = Math.floor(i / 10) * 40;
+      //     container.addChild(brick);
+      // }
+      //
+      // container.x = (app.renderer.width - container.width) / 2;
+      // container.y = (app.renderer.height - container.height) / 2;
+
+    }
+
+    // document.addEventListener("click", function(){
+    //   debugger
+    // })
+
+    //events
+    document.addEventListener("keydown", function(e){
+      setDirection()
+    })
+
+    // window.addEventListener("resize", function(e){
+    //   worldWidth = window.innerWidth
+    //   worldHeight = window.innerHeight
+    //   app.renderer.view.style.width = worldWidth + 'px';
+    //   app.renderer.view.style.height = worldHeight + 'px';
+    // })
+
+    function GameLoop(){
+      move()
+      debugger
+      //player.hitArea.contains(apple.x, apple.y)
+      requestAnimationFrame(GameLoop)
+    }
+
+    function setDirection(){
+      let key = this.event.key
+      if(key == "ArrowLeft"){
+        console.log("left")
+        direction = "left"
+      }else if (key == "ArrowRight") {
+        console.log("right")
+        direction = "right"
+      }else if (key == "ArrowUp") {
+        console.log("up")
+        direction = "up"
+      }else if (key == "ArrowDown") {
+        console.log("down")
+        direction = "down"
+      }
+    }
+
+    function move(){
+      if(direction == "right"){
+        player.position.x += speed
+      }else if (direction == "up") {
+        player.position.y -= speed
+      }else if (direction == "down") {
+        player.position.y += speed
+      }else if (direction == "left") {
+        player.position.x -= speed
+      }
+    }
+
+    setup()
+
+    GameLoop()
+
+    </script>
+  </body>
+</html>
